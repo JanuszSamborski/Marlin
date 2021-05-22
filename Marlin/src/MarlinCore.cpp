@@ -123,6 +123,10 @@
   #include "feature/leds/leds.h"
 #endif
 
+#if ENABLED(MONO_LED)
+  #include "feature/leds/mono_leds.h"
+#endif
+
 #if ENABLED(BLTOUCH)
   #include "feature/bltouch.h"
 #endif
@@ -759,6 +763,28 @@ void idle(TERN_(ADVANCED_PAUSE_FEATURE, bool no_stepper_sleep/*=false*/)) {
         if (endstops.tmc_spi_homing_check()) break;
   #endif
 
+  // Progress led
+  #if ENABLED(MONO_LED)
+    if (card.isPrinting()){
+      uint8_t percent = card.percentDone();
+      if (percent > 99) {
+        extDigitalWrite(LED4, LOW);
+        // mono_led.switch_led(4, HIGH);
+      } else if (percent > 75) {
+        extDigitalWrite(LED3, LOW);
+        // mono_led.switch_led(3, HIGH);
+      } else if (percent > 50) {
+        extDigitalWrite(LED2, LOW);
+        // mono_led.switch_led(2, HIGH);
+      } else if (percent > 25) {
+        extDigitalWrite(LED1, LOW);
+        // mono_led.switch_led(1, HIGH);
+      } else {
+        extDigitalWrite(LED1, HIGH);
+      }
+    }
+  #endif
+
   // Handle SD Card insert / remove
   TERN_(SDSUPPORT, card.manage_media());
 
@@ -1326,7 +1352,7 @@ void setup() {
   #endif
 
   #if ENABLED(CUSTOM_USER_BUTTONS)
-    #define INIT_CUSTOM_USER_BUTTON_PIN(N) do{ SET_INPUT(BUTTON##N##_PIN); WRITE(BUTTON##N##_PIN, !BUTTON##N##_HIT_STATE); }while(0)
+    #define INIT_CUSTOM_USER_BUTTON_PIN(N) do{ if(BUTTON##N##_PULLUP){SET_INPUT_PULLUP(BUTTON##N##_PIN);} else{SET_INPUT(BUTTON##N##_PIN);}; WRITE(BUTTON##N##_PIN, !BUTTON##N##_HIT_STATE); }while(0)
 
     #if HAS_CUSTOM_USER_BUTTON(1)
       INIT_CUSTOM_USER_BUTTON_PIN(1);

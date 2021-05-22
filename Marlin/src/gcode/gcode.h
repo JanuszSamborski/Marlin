@@ -591,6 +591,7 @@ private:
     static void M28();
     static void M29();
     static void M30();
+    static void M35();
   #endif
 
   static void M31();

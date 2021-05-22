@@ -183,6 +183,7 @@
 #define BOARD_AZTEEG_X1               1509  // Azteeg X1
 #define BOARD_ANET_10                 1510  // Anet 1.0 (Melzi clone)
 #define BOARD_ZMIB_V2                 1511  // ZoneStar ZMIB V2
+#define BOARD_EASYTHREED_X1           1512  // EasyThreed X1 / Sondori Pico?
 
 //
 // Other ATmega644P, ATmega644, ATmega1284P
